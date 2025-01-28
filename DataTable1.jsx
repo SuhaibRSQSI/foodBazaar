@@ -91,6 +91,21 @@ export default function DataTable({ data, columns }) {
   const filteredData = data.filter((row) =>
     Object.entries(filters).every(([key, selectedValues]) =>
       selectedValues.length === 0 ? true : selectedValues.includes(row[key])
+
+                                  const filteredData = data.filter((row) =>
+  Object.entries(filters).every(([key, selectedValues]) => {
+    if (selectedValues.length === 0) return true; // No filters applied, include all
+
+    const cellValue = row[key];
+
+    // Handle aggregated string data
+    const values = typeof cellValue === "string" ? cellValue.split(",").map((v) => v.trim()) : [cellValue];
+
+    // Check if any value matches the selected filters
+    return values.some((value) => selectedValues.includes(value));
+  })
+);
+
     )
   );
 
